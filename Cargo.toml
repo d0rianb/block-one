@@ -1,5 +1,5 @@
 [package]
-name = "text-editor"
+name = "block-one"
 version = "0.2.0"
 edition = "2021"
 
