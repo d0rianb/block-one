@@ -1,6 +1,6 @@
 use speedy2d::window::UserEventSender;
 
-use crate::EditorEvent;
+use crate::AppEvent;
 
 #[allow(dead_code)]
 #[derive(PartialEq, Debug, Clone, Copy)]
@@ -53,7 +53,7 @@ pub struct Animation {
     speed: f32,
     pub last_t: f32,
     #[derivative(Debug = "ignore")]
-    pub event_sender: UserEventSender<EditorEvent>,
+    pub event_sender: UserEventSender<AppEvent>,
 }
 
 impl Clone for Animation {
@@ -63,7 +63,7 @@ impl Clone for Animation {
 }
 
 impl Animation {
-    pub fn new(from: f32, to: f32, duration: f32, easing: EasingFunction, es: UserEventSender<EditorEvent>) -> Self {
+    pub fn new(from: f32, to: f32, duration: f32, easing: EasingFunction, es: UserEventSender<AppEvent>) -> Self {
         Self {
             from,
             to,
@@ -82,7 +82,7 @@ impl Animation {
         }
     }
 
-    pub fn new_infinite(from: f32, to: f32, duration: f32, easing: EasingFunction, es: UserEventSender<EditorEvent>) -> Self {
+    pub fn new_infinite(from: f32, to: f32, duration: f32, easing: EasingFunction, es: UserEventSender<AppEvent>) -> Self {
         let mut animation = Self::new(from, to, duration, easing, es);
         animation.infinite = true;
         animation
@@ -138,7 +138,7 @@ impl Animation {
         }
         self.last_t = t;
         self.value = self.from + (self.to - self.from) * (self.easing_fn)(t);
-        self.event_sender.send_event(EditorEvent::Redraw).unwrap();
+        self.event_sender.send_event(AppEvent::Redraw).unwrap();
     }
 
     #[inline]
@@ -152,6 +152,6 @@ impl Animation {
             self.last_t = 0.;
             self.is_ended = false;
         }
-        self.event_sender.send_event(EditorEvent::Redraw).unwrap();
+        self.event_sender.send_event(AppEvent::Redraw).unwrap();
     }
 }
