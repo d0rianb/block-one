@@ -1,8 +1,8 @@
+use std::ops::Mul;
 use speedy2d::color::Color;
 use speedy2d::dimen::Vector2;
 use speedy2d::Graphics2D;
-use speedy2d::shape::Rectangle;
-
+use speedy2d::shape::{Polygon, Rectangle};
 
 #[inline]
 pub fn draw_rounded_rectangle(x: f32, y: f32, width: f32, height: f32, radius: f32, color: Color, graphics: &mut Graphics2D) {
@@ -43,4 +43,25 @@ pub fn draw_rounded_line(x: f32, y: f32, width: f32, height: f32, color: Color, 
     graphics.draw_circle(Vector2::new(x + radius, y + height - radius), radius, color);
     graphics.draw_rectangle(Rectangle::new(Vector2::new(x + radius, y), Vector2::new(x + width - radius, y + height)), color);
     graphics.draw_rectangle(Rectangle::new(Vector2::new(x, y + radius), Vector2::new(x + width, y + height - radius)), color);
+}
+
+type Point = Vector2<f32>;
+
+#[inline]
+pub fn draw_bezier_curve(start: Point, control1: Point, control2: Point, end: Point, graphics: &mut Graphics2D) {
+    let nb_subdivision = 100;
+    let mut points = vec![start];
+    // DEBUG
+    graphics.draw_circle(start, 2., Color::RED);
+    graphics.draw_circle(control1, 2., Color::RED);
+    graphics.draw_circle(control2, 2., Color::RED);
+    graphics.draw_circle(end, 2., Color::RED);
+    for i in 0 .. nb_subdivision {
+        let t = (i as f32 + 1.) / nb_subdivision as f32;
+        assert!(0. <= t && t <= 1.);
+        let new_point = start.mul((1.-t).powf(3.)) + control1.mul(3.*(1.-t).powf(2.)*t) + control2.mul(3.*(1.-t)*t.powf(2.)) + end.mul(t.powf(3.)); // Bezier polynom
+        if i >= 1 { graphics.draw_line(points[i-1], points[i], 1., Color::BLACK); } // draw the curve
+        points.push(new_point);
+    }
+    graphics.draw_line(points.last().unwrap(), end, 1., Color::BLACK);
 }

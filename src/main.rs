@@ -1,6 +1,7 @@
 mod context;
 mod animation;
 mod block;
+mod link;
 mod render_helper;
 
 #[macro_use]
@@ -58,7 +59,7 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
         }
     }
 
-    fn on_resize(&mut self, _helper: &mut WindowHelper<AppEvent>, size_pixels: Vector2<u32>) {}
+    fn on_resize(&mut self, _helper: &mut WindowHelper<AppEvent>, _size_pixels: Vector2<u32>) {}
 
     fn on_draw(&mut self, _helper: &mut WindowHelper<AppEvent>, graphics: &mut Graphics2D) {
         graphics.clear_screen(Color::WHITE);
@@ -67,6 +68,7 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
 
     fn on_mouse_move(&mut self, helper: &mut WindowHelper<AppEvent>, position: Vector2<f32>) {
         self.context.mouse_position = position;
+        helper.request_redraw();
     }
 
     fn on_mouse_button_down(&mut self, helper: &mut WindowHelper<AppEvent>, button: MouseButton) {
@@ -82,14 +84,8 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
         }
     }
 
-    fn on_key_down(&mut self, helper: &mut WindowHelper<AppEvent>, virtual_key_code: Option<VirtualKeyCode>, _scancode: KeyScancode) {
-        // if let Some(keycode) = virtual_key_code {
-        //     match self.focus {
-        //         FocusElement::Menu(id) => self.editor.get_menu(id).handle_key(keycode, modifiers),
-        //         FocusElement::Editor => self.editor.handle_key(keycode),
-        //         FocusElement::MenuInput(id) => self.editor.get_menu(id).send_key_to_input(keycode, modifiers),
-        //     }
-        // }
+    fn on_key_down(&mut self, helper: &mut WindowHelper<AppEvent>, _virtual_key_code: Option<VirtualKeyCode>, _scancode: KeyScancode) {
+
         helper.request_redraw();
     }
 
@@ -120,10 +116,10 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
         }
     }
 
-    fn on_keyboard_modifiers_changed(&mut self, _helper: &mut WindowHelper<AppEvent>, state: ModifiersState) { }
+    fn on_keyboard_modifiers_changed(&mut self, _helper: &mut WindowHelper<AppEvent>, _state: ModifiersState) { }
 }
 
-fn set_app_title(helper: &mut WindowHelper<AppEvent>, path: &str) {
+fn set_app_title(helper: &mut WindowHelper<AppEvent>, _path: &str) {
     helper.set_title("Block One")
 }
 
@@ -139,7 +135,7 @@ fn main() {
             Some(WindowPosition::Center)
         )
     ).unwrap();
-    let mut context = Context::new();
+    let context = Context::new();
     if args.len() > 1 { }
 
     let window_handler = AppWindowHandler {

@@ -4,6 +4,7 @@ use speedy2d::Graphics2D;
 
 use crate::render_helper::{draw_rounded_rectangle_with_border};
 
+#[derive(Copy, Clone)]
 pub struct Block {
     pub pos: Vector2<f32>,
     pub width: f32,
