@@ -56,6 +56,9 @@ pub fn draw_bezier_curve(start: Point, control1: Point, control2: Point, end: Po
     graphics.draw_circle(control1, 2., Color::RED);
     graphics.draw_circle(control2, 2., Color::RED);
     graphics.draw_circle(end, 2., Color::RED);
+    graphics.draw_line(start, control1, 0.5, Color::CYAN);
+    graphics.draw_line(control1, control2, 0.5, Color::CYAN);
+    graphics.draw_line(control2, end, 0.5, Color::CYAN);
     for i in 0 .. nb_subdivision {
         let t = (i as f32 + 1.) / nb_subdivision as f32;
         assert!(0. <= t && t <= 1.);

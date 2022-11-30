@@ -5,7 +5,8 @@ use std::ptr;
 use std::rc::Rc;
 
 use speedy2d::color::Color;
-use speedy2d::dimen::Vector2;
+use speedy2d::dimen::{Vec2, Vector2};
+use speedy2d::font::{Font, FormattedTextBlock};
 use speedy2d::Graphics2D;
 
 use crate::block::Block;

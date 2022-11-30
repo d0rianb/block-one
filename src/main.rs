@@ -67,25 +67,32 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
     }
 
     fn on_mouse_move(&mut self, helper: &mut WindowHelper<AppEvent>, position: Vector2<f32>) {
+        if self.context.drag { self.context.move_block(position); }
         self.context.mouse_position = position;
         helper.request_redraw();
     }
 
     fn on_mouse_button_down(&mut self, helper: &mut WindowHelper<AppEvent>, button: MouseButton) {
-        self.context.on_keypress(button);
+        self.context.on_mouse_clicked(button);
+        match button {
+            MouseButton::Left => self.context.drag = true,
+            _ => {}
+        }
         helper.request_redraw();
     }
 
     fn on_mouse_button_up(&mut self, _helper: &mut WindowHelper<AppEvent>, button: MouseButton) {
         match button {
-            MouseButton::Left => self.mouse_button_pressed.0 = false,
+            MouseButton::Left => {
+                self.mouse_button_pressed.0 = false;
+                self.context.drag = false;
+            },
             MouseButton::Right => self.mouse_button_pressed.1 = false,
             _ => ()
         }
     }
 
     fn on_key_down(&mut self, helper: &mut WindowHelper<AppEvent>, _virtual_key_code: Option<VirtualKeyCode>, _scancode: KeyScancode) {
-
         helper.request_redraw();
     }
 

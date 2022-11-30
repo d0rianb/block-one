@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::ops::Add;
 use std::rc::Rc;
 
 use speedy2d::dimen::Vector2;
@@ -11,6 +12,7 @@ use crate::link::Link;
 pub struct Context {
     blocks: Vec<Rc<RefCell<Block>>>,
     links: Vec<Link>,
+    pub drag: bool,
     pub mouse_position: Vector2<f32>,
 }
 
@@ -19,6 +21,7 @@ impl Context {
         Self {
             blocks: vec![],
             links: vec![],
+            drag: false,
             mouse_position: Vector2::ZERO,
         }
     }
@@ -30,7 +33,8 @@ impl Context {
             _ => {}
         }
     }
-    pub fn on_keypress(&mut self, button: MouseButton) {
+
+    pub fn on_mouse_clicked(&mut self, button: MouseButton) {
         match button {
             MouseButton::Left => {
                 self.blocks.iter().for_each(|block| block.borrow_mut().is_focused = false); // TODO: check if shift is pressed
@@ -60,6 +64,14 @@ impl Context {
         for block in focused_block {
             self.links.push(Link::new(block));
         }
+    }
+
+    pub fn move_block(&mut self, new_position: Vector2<f32>) {
+        let delta = new_position - self.mouse_position;
+        self.get_focused_blocks().iter().for_each(|block| {
+            let old_pos = block.borrow_mut().pos.clone();
+            block.borrow_mut().pos= old_pos.add(delta);
+        });
     }
 
     fn get_block_at(&mut self, pos: Vector2<f32>) -> Option<Rc<RefCell<Block>>> {
