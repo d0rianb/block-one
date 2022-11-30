@@ -20,10 +20,14 @@ impl Default for Block {
 
 impl Block {
     pub fn new(pos: Vector2<f32>) -> Self {
+        Self::new_sized(pos, 150., 80.)
+    }
+
+    pub fn new_sized(pos: Vector2<f32>, width: f32, height: f32) -> Self {
         Self {
             pos,
-            width: 150.,
-            height: 80.,
+            width,
+            height,
             is_focused: false
         }
     }

@@ -32,7 +32,7 @@ impl Link {
 
     pub fn render(&self, mouse_pos: Vector2<f32>, graphics: &mut Graphics2D) {
         let from_block = self.from.borrow();
-        let virtual_mouse_block = Block::new(mouse_pos); // Virtual block representing the cursor
+        let virtual_mouse_block = Block::new_sized(mouse_pos, 0., 0.); // Virtual block representing the cursor
         let virtual_mouse_ref= Rc::new(RefCell::new(virtual_mouse_block));
         let mut to_block = self.to.as_ref().unwrap_or(&virtual_mouse_ref).borrow();
         let dist = from_block.pos.x - to_block.pos.x;
