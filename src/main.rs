@@ -4,6 +4,7 @@ mod block;
 mod link;
 mod render_helper;
 
+
 #[macro_use]
 extern crate derivative;
 extern crate core;
@@ -92,7 +93,11 @@ impl WindowHandler<AppEvent> for AppWindowHandler {
         }
     }
 
-    fn on_key_down(&mut self, helper: &mut WindowHelper<AppEvent>, _virtual_key_code: Option<VirtualKeyCode>, _scancode: KeyScancode) {
+    fn on_key_down(&mut self, helper: &mut WindowHelper<AppEvent>, virtual_key_code: Option<VirtualKeyCode>, _scancode: KeyScancode) {
+        match virtual_key_code {
+            Some(VirtualKeyCode::Backspace | VirtualKeyCode::Delete) => self.context.delete_focused_block(),
+            _ => {}
+        }
         helper.request_redraw();
     }
 

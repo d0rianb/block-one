@@ -30,7 +30,7 @@ impl Context {
         match string.as_ref() {
             "n" | "a" => self.add_block(),
             "l" => self.add_link(),
-            _ => {}
+            _ => {dbg!(string);}
         }
     }
 
@@ -72,6 +72,26 @@ impl Context {
             let old_pos = block.borrow_mut().pos.clone();
             block.borrow_mut().pos= old_pos.add(delta);
         });
+    }
+
+    pub fn delete_focused_block(&mut self) {
+        let focused_blocks = self.get_focused_blocks();
+        let mut block_remove_indices = vec![];
+        let mut link_remove_indices = vec![];
+        for block in focused_blocks.iter() {
+            let index = self.blocks.iter().position(|context_block|Rc::ptr_eq(block, context_block));
+            if let Some(i) = index { block_remove_indices.push(i); }
+            for (i, link) in self.links.iter().enumerate() {
+                if Rc::ptr_eq(&link.from, block) { link_remove_indices.push(i); }
+                if let Some(to) = &link.to {
+                    if Rc::ptr_eq(&to, block) { link_remove_indices.push(i); }
+                }
+            }
+        }
+        block_remove_indices.dedup();
+        link_remove_indices.dedup();
+        for i in block_remove_indices.iter().rev() { self.blocks.remove(*i); }
+        for i in link_remove_indices.iter().rev() { self.links.remove(*i); }
     }
 
     fn get_block_at(&mut self, pos: Vector2<f32>) -> Option<Rc<RefCell<Block>>> {

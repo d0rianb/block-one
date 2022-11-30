@@ -1,6 +1,5 @@
 use std::cell::{Ref, RefCell};
-use std::convert::AsRef;
-use std::ops::{Deref, Mul};
+use std::ops::Mul;
 use std::ptr;
 use std::rc::Rc;
 
@@ -12,6 +11,7 @@ use speedy2d::Graphics2D;
 use crate::block::Block;
 use crate::render_helper::draw_bezier_curve;
 
+#[derive(Clone)]
 pub struct Link {
     pub from: Rc<RefCell<Block>>,
     pub to: Option<Rc<RefCell<Block>>>,
